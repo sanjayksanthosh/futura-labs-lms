@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd /d)",
+      "Bash(find \"Ai Lms/futura-labs-ai-tutor-lms/server/tests\" -type f -name \"*.js\")"
+    ]
+  }
+}
