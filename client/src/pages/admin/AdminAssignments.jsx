@@ -22,7 +22,7 @@ export const AdminAssignments = () => {
   const createMutation = useMutate((d) => assignmentService.create(d), { invalidateKeys: ['admin-assignments'] });
   const updateMutation = useMutate(({ id, data }) => assignmentService.update(id, data), { invalidateKeys: ['admin-assignments'] });
   const deleteMutation = useMutate((id) => assignmentService.delete(id), { invalidateKeys: ['admin-assignments'] });
-  const gradeMutation = useMutate(({ submissionId, data }) => assignmentService.gradeSubmission(submissionId, data), { invalidateKeys: ['admin-assignments'] });
+  const gradeMutation = useMutate(({ submissionId, data }) => assignmentService.gradeSubmission(submissionId, data), { invalidateKeys: ['admin-assignments', 'submissions'] });
 
   // Fetch submissions when viewing
   const { data: subsData } = useFetch(['submissions', viewSubmissions?._id], () =>

@@ -23,7 +23,10 @@ exports.getQuizzes = async (req, res, next) => {
     if (req.userRole === 'mentor') {
       query = Quiz.find({ createdBy: req.userId }).populate('course', 'title');
     } else if (req.userRole === 'student') {
-      query = Quiz.find({ isPublished: true, course: req.query.courseId }).populate('course', 'title');
+      const student = await require('../models/User').findById(req.userId).select('enrolledCourses');
+      const enrolled = student?.enrolledCourses || [];
+      const filter = enrolled.length > 0 ? { isPublished: true, course: { $in: enrolled } } : { isPublished: true };
+      query = Quiz.find(filter).populate('course', 'title');
       const quizzes = await query;
       const results = await QuizResult.find({ student: req.userId, quiz: { $in: quizzes.map((q) => q._id) } });
       const resultMap = {};

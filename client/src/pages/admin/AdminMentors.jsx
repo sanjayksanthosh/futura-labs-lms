@@ -14,7 +14,7 @@ export const AdminMentors = () => {
   const [showModal, setShowModal] = useState(false);
 
   const { data, isLoading } = useFetch(['mentors', page], () =>
-    userService.getAll({ role: { $in: ['mentor', 'admin'] }, page, limit: 10 })
+    userService.getAll({ role: 'mentor,admin', page, limit: 10 })
   );
 
   const createMutation = useMutate((formData) => userService.create(formData), { invalidateKeys: ['mentors'] });

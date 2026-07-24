@@ -19,7 +19,10 @@ exports.getAssignments = async (req, res, next) => {
   try {
     let query;
     if (req.userRole === 'student') {
-      query = Assignment.find({ course: req.query.courseId }).populate('course', 'title');
+      const student = await require('../models/User').findById(req.userId).select('enrolledCourses');
+      const enrolled = student?.enrolledCourses || [];
+      const filter = enrolled.length > 0 ? { course: { $in: enrolled } } : {};
+      query = Assignment.find(filter).populate('course', 'title');
       const assignments = await query;
 
       const submissions = await AssignmentSubmission.find({

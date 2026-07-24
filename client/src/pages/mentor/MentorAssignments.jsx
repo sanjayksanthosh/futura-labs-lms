@@ -21,7 +21,7 @@ export const MentorAssignments = () => {
   const createMutation = useMutate((d) => assignmentService.create(d), { invalidateKeys: ['mentor-assignments-list'] });
   const updateMutation = useMutate(({ id, data }) => assignmentService.update(id, data), { invalidateKeys: ['mentor-assignments-list'] });
   const deleteMutation = useMutate((id) => assignmentService.delete(id), { invalidateKeys: ['mentor-assignments-list'] });
-  const gradeMutation = useMutate(({ submissionId, data }) => assignmentService.gradeSubmission(submissionId, data), { invalidateKeys: ['mentor-assignments-list'] });
+  const gradeMutation = useMutate(({ submissionId, data }) => assignmentService.gradeSubmission(submissionId, data), { invalidateKeys: ['mentor-assignments-list', 'mentor-submissions'] });
 
   const { data: subsData } = useFetch(['mentor-submissions', viewSubmissions?._id], () =>
     assignmentService.getSubmissions(viewSubmissions._id, {}), { enabled: !!viewSubmissions }
