@@ -1,5 +1,6 @@
 require('dotenv').config();
 const http = require('http');
+const mongoose = require('mongoose');
 const { Server } = require('socket.io');
 const app = require('./app');
 const config = require('./config');
@@ -31,7 +32,9 @@ const startServer = async () => {
   try {
     await connectDB();
 
-    await autoSeed();
+    if (mongoose.connection.readyState === 1) {
+      await autoSeed();
+    }
 
     if (config.env !== 'test') {
       await connectRedis();
@@ -58,7 +61,8 @@ const startServer = async () => {
       }
     });
   } catch (error) {
-    logger.error('Failed to start server:', error);
+    console.error('Failed to start server:', error.message);
+    console.error(error.stack);
     process.exit(1);
   }
 };

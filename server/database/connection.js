@@ -12,7 +12,11 @@ const connectDB = async () => {
     logger.info(`MongoDB Connected: ${conn.connection.host}`);
     return conn;
   } catch (error) {
-    logger.error(`MongoDB Connection Error: ${error.message}`);
+    console.error(`MongoDB Connection Error: ${error.message}`);
+    if (config.env === 'production') {
+      logger.warn('Running without database — API calls will fail');
+      return null;
+    }
     throw error;
   }
 };
