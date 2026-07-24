@@ -5,7 +5,7 @@ import { addNotification } from '../redux/slices/uiSlice';
 
 const SocketContext = createContext();
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || (import.meta.env.PROD ? window.location.origin : 'http://localhost:5000');
 
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
@@ -15,22 +15,31 @@ export const SocketProvider = ({ children }) => {
   useEffect(() => {
     if (!isAuthenticated || !user) return;
 
-    const newSocket = io(SOCKET_URL, {
-      transports: ['websocket', 'polling'],
-    });
+    let newSocket;
+    try {
+      newSocket = io(SOCKET_URL, {
+        transports: ['websocket', 'polling'],
+        timeout: 5000,
+        reconnection: false,
+      });
 
-    newSocket.on('connect', () => {
-      newSocket.emit('join', user._id || user.id);
-    });
+      newSocket.on('connect', () => {
+        newSocket.emit('join', user._id || user.id);
+      });
 
-    newSocket.on('notification', (notification) => {
-      dispatch(addNotification(notification));
-    });
+      newSocket.on('notification', (notification) => {
+        dispatch(addNotification(notification));
+      });
 
-    setSocket(newSocket);
+      newSocket.on('connect_error', () => {});
+
+      setSocket(newSocket);
+    } catch {
+      // Socket not available in production — app still works without it
+    }
 
     return () => {
-      newSocket.close();
+      if (newSocket) newSocket.close();
     };
   }, [isAuthenticated, user, dispatch]);
 
