@@ -62,7 +62,7 @@ export const AdminStudents = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <StatsCard title="Total Students" value={students.length || 0} icon={Users} color="primary" />
+        <StatsCard title="Total Students" value={data?.pagination?.total || students.length || 0} icon={Users} color="primary" />
         <StatsCard title="Active" value={students.filter(s => s.isActive).length || 0} icon={UserCheck} color="secondary" />
         <StatsCard title="Inactive" value={students.filter(s => !s.isActive).length || 0} icon={UserX} color="accent" />
         <StatsCard title="Avg Per Batch" value={stats.avgPerBatch || '-'} icon={GraduationCap} color="purple" />

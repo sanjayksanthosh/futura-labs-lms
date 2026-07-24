@@ -9,8 +9,8 @@ import { timeAgo } from '../../utils/helpers';
 
 export const MentorDashboard = () => {
   const { data: perfData, isLoading } = useFetch('mentor-performance', () => analyticsService.getMyPerformance());
-  const { data: courseData } = useFetch('mentor-courses', () => courseService.getAll({ limit: 5 }));
-  const { data: assignData } = useFetch('mentor-assignments', () => assignmentService.getAll({ limit: 5 }));
+  const { data: courseData } = useFetch('mentor-courses-list', () => courseService.getAll({ limit: 5 }));
+  const { data: assignData } = useFetch('mentor-assignments-list', () => assignmentService.getAll({ limit: 5 }));
 
   if (isLoading) return <LoadingSpinner className="py-20" />;
 

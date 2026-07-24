@@ -60,7 +60,7 @@ export const AdminBatches = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <StatsCard title="Total Batches" value={batches.length} icon={Layers} color="primary" />
+        <StatsCard title="Total Batches" value={data?.pagination?.total || batches.length} icon={Layers} color="primary" />
         <StatsCard title="Active" value={batches.filter(b => b.status === 'active').length} icon={Calendar} color="secondary" />
         <StatsCard title="Upcoming" value={batches.filter(b => b.status === 'upcoming').length} icon={Clock} color="accent" />
         <StatsCard title="Total Students" value={batches.reduce((s, b) => s + (b.students?.length || 0), 0)} icon={Users} color="purple" />

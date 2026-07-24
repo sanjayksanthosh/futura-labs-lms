@@ -40,7 +40,7 @@ export const MentorStudents = () => {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
       <div><h1 className="text-2xl font-bold">Students</h1><p className="text-slate-500">View and manage your students</p></div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <StatsCard title="Total" value={students.length} icon={Users} color="primary" />
+        <StatsCard title="Total" value={data?.pagination?.total || students.length} icon={Users} color="primary" />
         <StatsCard title="Active" value={students.filter(s => s.isActive).length} icon={UserCheck} color="secondary" />
         <StatsCard title="Avg Progress" value={students.length > 0 ? Math.round(students.reduce((s, st) => s + (st.progress?.overallPercentage || 0), 0) / students.length) : 0} icon={GraduationCap} color="accent" suffix="%" />
       </div>

@@ -17,7 +17,9 @@ export const MentorCourses = () => {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
       <div className="flex items-center justify-between">
         <div><h1 className="text-2xl font-bold">My Courses</h1><p className="text-slate-500">Manage your courses</p></div>
-        <button onClick={() => navigate('/admin/courses/create')} className="btn-primary flex items-center gap-2"><Plus className="h-4 w-4" /> Create Course</button>
+        <button onClick={() => navigate('/course/create')} className="btn-primary flex items-center gap-2">
+          <Plus className="h-4 w-4" /> Create Course
+        </button>
       </div>
 
       <div className="grid grid-cols-3 gap-4">
@@ -48,7 +50,7 @@ export const MentorCourses = () => {
                 </div>
                 <div className="flex gap-2">
                   <button onClick={(e) => { e.stopPropagation(); navigate(`/course/${course._id}`); }} className="btn-secondary text-xs py-1.5 flex-1"><Eye className="h-3 w-3" /> View</button>
-                  <button onClick={(e) => { e.stopPropagation(); navigate(`/admin/courses/${course._id}/edit`); }} className="btn-secondary text-xs py-1.5"><Edit3 className="h-3 w-3" /></button>
+                  <button onClick={(e) => { e.stopPropagation(); navigate(`/course/${course._id}/edit`); }} className="btn-secondary text-xs py-1.5"><Edit3 className="h-3 w-3" /></button>
                 </div>
               </div>
             </motion.div>

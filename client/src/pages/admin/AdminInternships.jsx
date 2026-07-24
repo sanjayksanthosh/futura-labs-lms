@@ -30,7 +30,7 @@ export const AdminInternships = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <StatsCard title="Total" value={internships.length} icon={Briefcase} color="primary" />
+        <StatsCard title="Total" value={data?.pagination?.total || internships.length} icon={Briefcase} color="primary" />
         <StatsCard title="Active" value={internships.filter(i => i.status === 'active').length} icon={Building} color="secondary" />
         <StatsCard title="Completed" value={internships.filter(i => i.status === 'completed').length} icon={Calendar} color="accent" />
         <StatsCard title="Pending" value={internships.filter(i => i.status === 'pending').length} icon={MapPin} color="purple" />

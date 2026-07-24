@@ -3,6 +3,7 @@ import { useFetch } from '../../hooks/useQuery';
 import { internshipService } from '../../services/endpoints';
 import { Briefcase } from 'lucide-react';
 import { Badge } from '../../components/ui/Badge';
+import { LoadingSpinner } from '../../components/ui/LoadingSpinner';
 import { formatDate } from '../../utils/helpers';
 
 const statusColors = { active: 'success', completed: 'info', pending: 'warning', cancelled: 'danger' };
@@ -14,6 +15,7 @@ export const StudentInternships = () => {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
       <div><h1 className="text-2xl font-bold">My Internships</h1></div>
+      {isLoading ? <LoadingSpinner className="py-20" /> : (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {internships.length === 0 ? <div className="col-span-full text-center py-16 text-slate-500">No internships yet</div> : internships.map((intern) => (
           <div key={intern._id} className="glass rounded-2xl p-6">
@@ -29,6 +31,7 @@ export const StudentInternships = () => {
           </div>
         ))}
       </div>
+      )}
     </motion.div>
   );
 };

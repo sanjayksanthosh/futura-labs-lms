@@ -10,6 +10,7 @@ router.get('/', authorize('super_admin', 'admin', 'mentor'), userController.getU
 router.get('/:id', authorize('super_admin', 'admin', 'mentor'), userController.getUser);
 router.post('/', authorize('super_admin', 'admin'), userController.createUser);
 router.put('/:id', authorize('super_admin', 'admin'), userController.updateUser);
+router.put('/:id/change-password', userController.changePassword);
 router.delete('/:id', authorize('super_admin'), userController.deleteUser);
 
 module.exports = router;

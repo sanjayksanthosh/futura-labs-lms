@@ -167,6 +167,8 @@ export const AppRoutes = () => {
         <Route path="/quiz/take/:quizId" element={<QuizTaking />} />
         <Route path="/assignment/submit/:assignmentId" element={<AssignmentSubmission />} />
         <Route path="/course/:courseId" element={<CourseDetail />} />
+        <Route path="/course/create" element={<CourseCreator />} />
+        <Route path="/course/:courseId/edit" element={<CourseCreator />} />
         <Route path="/ai" element={<AiDashboard />} />
         <Route path="/ai/quiz-generator" element={<AiQuizGenerator />} />
         <Route path="/ai/assignment-eval" element={<AiAssignmentEval />} />

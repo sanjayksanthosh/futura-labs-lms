@@ -5,6 +5,7 @@ export const userService = {
   getById: (id) => api.get(`/users/${id}`),
   create: (data) => api.post('/users', data),
   update: (id, data) => api.put(`/users/${id}`, data),
+  changePassword: (id, data) => api.put(`/users/${id}/change-password`, data),
   delete: (id) => api.delete(`/users/${id}`),
   bulkCreate: (users) => api.post('/users/bulk', { users }),
   getStats: () => api.get('/users/stats'),

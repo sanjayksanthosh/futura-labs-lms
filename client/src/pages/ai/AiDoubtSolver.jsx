@@ -74,7 +74,10 @@ export const AiDoubtSolver = () => {
 
   const formatAnswer = (text) => {
     if (!text) return '';
-    return text
+    const div = document.createElement('div');
+    div.textContent = text;
+    const safe = div.innerHTML;
+    return safe
       .replace(/### (.+)/g, '<h3 class="text-lg font-bold mt-4 mb-2 text-slate-800 dark:text-slate-200">$1</h3>')
       .replace(/## (.+)/g, '<h2 class="text-xl font-bold mt-5 mb-2 text-slate-800 dark:text-slate-200">$1</h2>')
       .replace(/# (.+)/g, '<h1 class="text-2xl font-bold mt-6 mb-3 text-slate-800 dark:text-slate-200">$1</h1>')

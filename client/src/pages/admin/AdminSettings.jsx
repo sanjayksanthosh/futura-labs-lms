@@ -18,11 +18,11 @@ export const AdminSettings = () => {
   const [notifPrefs, setNotifPrefs] = useState({ email: true, push: true, sms: false, digest: 'daily' });
 
   const updateProfileMut = useMutate((d) => userService.update(user?._id, d), { invalidateKeys: ['profile'] });
+  const changePasswordMut = useMutate((d) => userService.changePassword(user?._id, d));
 
-  const handleProfile = async (e) => {
+  const handleProfile = (e) => {
     e.preventDefault();
     updateProfileMut.mutate(profile);
-    toast.success('Profile updated');
   };
 
   const handlePassword = async (e) => {
@@ -31,9 +31,10 @@ export const AdminSettings = () => {
       toast.error('Passwords do not match');
       return;
     }
-    updateProfileMut.mutate({ password: passwords.newPassword });
-    toast.success('Password changed');
-    setPasswords({ currentPassword: '', newPassword: '', confirmPassword: '' });
+    changePasswordMut.mutate(
+      { currentPassword: passwords.currentPassword, newPassword: passwords.newPassword },
+      { onSuccess: () => setPasswords({ currentPassword: '', newPassword: '', confirmPassword: '' }) }
+    );
   };
 
   return (

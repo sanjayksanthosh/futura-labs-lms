@@ -56,14 +56,34 @@ exports.createUser = async (req, res, next) => {
 
 exports.updateUser = async (req, res, next) => {
   try {
-    const { name, email, phone, role, isActive, institute, batch, permissions } = req.body;
+    const { name, email, phone, role, isActive, institute, batch, permissions, bio } = req.body;
     const user = await User.findByIdAndUpdate(
       req.params.id,
-      { $set: { name, email, phone, role, isActive, institute, batch, permissions } },
+      { $set: { name, email, phone, role, isActive, institute, batch, permissions, bio } },
       { new: true, runValidators: true }
     );
     if (!user) return next(new AppError('User not found', 404));
     res.status(200).json({ success: true, data: user, message: 'User updated' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.changePassword = async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    if (!currentPassword || !newPassword) return next(new AppError('Both current and new password are required', 400));
+    if (newPassword.length < 6) return next(new AppError('New password must be at least 6 characters', 400));
+
+    const user = await User.findById(req.params.id).select('+password');
+    if (!user) return next(new AppError('User not found', 404));
+
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) return next(new AppError('Current password is incorrect', 401));
+
+    user.password = newPassword;
+    await user.save();
+    res.status(200).json({ success: true, message: 'Password changed successfully' });
   } catch (error) {
     next(error);
   }

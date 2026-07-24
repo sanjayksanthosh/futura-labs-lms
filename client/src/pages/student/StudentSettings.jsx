@@ -3,31 +3,32 @@ import { motion } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
 import { setTheme } from '../../redux/slices/uiSlice';
 import { useAuth } from '../../hooks/useAuth';
+import { useMutate } from '../../hooks/useQuery';
+import { userService } from '../../services/endpoints';
 import toast from 'react-hot-toast';
 
 export const StudentSettings = () => {
   const dispatch = useDispatch();
   const theme = useSelector((state) => state.ui.theme);
-  const { user, updateProfile, changePassword } = useAuth();
+  const { user, updateProfile } = useAuth();
   const [form, setForm] = useState({ name: user?.name || '', phone: user?.phone || '' });
   const [passForm, setPassForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
 
+  const updateProfileMut = useMutate((d) => userService.update(user?._id, d), { invalidateKeys: ['profile'] });
+  const changePasswordMut = useMutate((d) => userService.changePassword(user?._id, d));
+
   const handleSave = (e) => {
     e.preventDefault();
-    updateProfile(form);
-    toast.success('Saved');
+    updateProfileMut.mutate(form);
   };
 
   const handleChangePassword = async (e) => {
     e.preventDefault();
     if (passForm.newPassword !== passForm.confirmPassword) return toast.error('Passwords do not match');
-    try {
-      await changePassword(passForm);
-      toast.success('Password changed');
-      setPassForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
-    } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed');
-    }
+    changePasswordMut.mutate(
+      { currentPassword: passForm.currentPassword, newPassword: passForm.newPassword },
+      { onSuccess: () => setPassForm({ currentPassword: '', newPassword: '', confirmPassword: '' }) }
+    );
   };
 
   return (
@@ -38,7 +39,7 @@ export const StudentSettings = () => {
         <form onSubmit={handleSave} className="space-y-4">
           <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="input-field" />
           <input type="text" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="input-field" placeholder="Phone" />
-          <button type="submit" className="btn-primary">Save</button>
+          <button type="submit" className="btn-primary" disabled={updateProfileMut.isPending}>Save</button>
         </form>
       </div>
       <div className="glass rounded-2xl p-6 space-y-4">
@@ -47,7 +48,7 @@ export const StudentSettings = () => {
           <input type="password" placeholder="Current password" value={passForm.currentPassword} onChange={(e) => setPassForm({ ...passForm, currentPassword: e.target.value })} className="input-field" required />
           <input type="password" placeholder="New password" value={passForm.newPassword} onChange={(e) => setPassForm({ ...passForm, newPassword: e.target.value })} className="input-field" required minLength={6} />
           <input type="password" placeholder="Confirm password" value={passForm.confirmPassword} onChange={(e) => setPassForm({ ...passForm, confirmPassword: e.target.value })} className="input-field" required />
-          <button type="submit" className="btn-primary">Change Password</button>
+          <button type="submit" className="btn-primary" disabled={changePasswordMut.isPending}>Change Password</button>
         </form>
       </div>
       <div className="glass rounded-2xl p-6">

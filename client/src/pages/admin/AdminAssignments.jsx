@@ -66,7 +66,7 @@ export const AdminAssignments = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <StatsCard title="Total" value={assignments.length} icon={ClipboardCheck} color="primary" />
+        <StatsCard title="Total" value={data?.pagination?.total || assignments.length} icon={ClipboardCheck} color="primary" />
         <StatsCard title="Published" value={assignments.filter(a => a.isPublished).length} icon={Eye} color="secondary" />
         <StatsCard title="Submissions" value={assignments.reduce((s, a) => s + (a.submissionCount || 0), 0)} icon={Download} color="accent" />
         <StatsCard title="Avg Score" value={assignments.length ? Math.round(assignments.reduce((s, a) => s + (a.avgScore || 0), 0) / assignments.length) : 0} icon={Users} color="purple" suffix="%" />

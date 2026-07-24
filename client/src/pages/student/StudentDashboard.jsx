@@ -9,9 +9,9 @@ import { formatDate } from '../../utils/helpers';
 
 export const StudentDashboard = () => {
   const { data: progressData, isLoading } = useFetch('my-progress', () => analyticsService.getMyProgress());
-  const { data: courseData } = useFetch('student-courses', () => courseService.getAll({ limit: 50 }));
-  const { data: assignData } = useFetch('student-assignments', () => assignmentService.getAll({ limit: 5 }));
-  const { data: quizData } = useFetch('student-quizzes', () => quizService.getAll({ limit: 50 }));
+  const { data: courseData } = useFetch('student-courses-list', () => courseService.getAll({ limit: 50 }));
+  const { data: assignData } = useFetch('student-assignments-list', () => assignmentService.getAll({ limit: 5 }));
+  const { data: quizData } = useFetch('student-quizzes-list', () => quizService.getAll({ limit: 50 }));
 
   if (isLoading) return <LoadingSpinner className="py-20" />;
 

@@ -1,21 +1,15 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Plus, BookOpen } from 'lucide-react';
-import { useFetch, useMutate } from '../../hooks/useQuery';
+import { useFetch } from '../../hooks/useQuery';
 import { courseService } from '../../services/endpoints';
 import { StatsCard } from '../../components/ui/StatsCard';
-import { Modal } from '../../components/ui/Modal';
 import { Badge } from '../../components/ui/Badge';
-import { formatDate, truncate } from '../../utils/helpers';
+import { truncate } from '../../utils/helpers';
 
 export const AdminCourses = () => {
   const navigate = useNavigate();
-  const [showModal, setShowModal] = useState(false);
-
   const { data, isLoading } = useFetch('admin-courses', () => courseService.getAll({ limit: 50 }));
-  const createMutation = useMutate((formData) => courseService.create(formData), { invalidateKeys: ['admin-courses'] });
-
   const courses = data?.data || [];
 
   return (
@@ -31,7 +25,7 @@ export const AdminCourses = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <StatsCard title="Total Courses" value={courses.length} icon={BookOpen} color="primary" />
+        <StatsCard title="Total Courses" value={data?.pagination?.total || courses.length} icon={BookOpen} color="primary" />
         <StatsCard title="Published" value={courses.filter(c => c.isPublished).length} icon={BookOpen} color="secondary" />
         <StatsCard title="Free Courses" value={courses.filter(c => c.isFree).length} icon={BookOpen} color="accent" />
       </div>
@@ -59,27 +53,6 @@ export const AdminCourses = () => {
           </motion.div>
         ))}
       </div>
-
-      <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="Create Course" size="lg">
-        <form onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.target); createMutation.mutate(Object.fromEntries(fd)); setShowModal(false); }} className="space-y-4">
-          <input name="title" placeholder="Course Title" className="input-field" required />
-          <textarea name="description" placeholder="Description" className="input-field" rows={3} />
-          <input name="shortDescription" placeholder="Short Description" className="input-field" />
-          <div className="grid grid-cols-2 gap-4">
-            <select name="level" className="input-field">
-              <option value="beginner">Beginner</option>
-              <option value="intermediate">Intermediate</option>
-              <option value="advanced">Advanced</option>
-            </select>
-            <input name="category" placeholder="Category" className="input-field" />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <input name="price" type="number" placeholder="Price (0 for free)" className="input-field" defaultValue={0} />
-            <label className="flex items-center gap-2 text-sm"><input name="isFree" type="checkbox" defaultChecked /> Free Course</label>
-          </div>
-          <button type="submit" className="btn-primary w-full">Create Course</button>
-        </form>
-      </Modal>
     </motion.div>
   );
 };

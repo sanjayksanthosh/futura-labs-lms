@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema(
     email: { type: String, required: [true, 'Email is required'], unique: true, lowercase: true, trim: true },
     password: { type: String, required: [true, 'Password is required'], minlength: 6, select: false },
     phone: { type: String, trim: true },
+    bio: { type: String, trim: true, maxlength: 500 },
     avatar: { type: String, default: '' },
     role: { type: String, enum: ['super_admin', 'admin', 'mentor', 'student'], default: 'student' },
     isActive: { type: Boolean, default: true },

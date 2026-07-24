@@ -64,7 +64,7 @@ export const AdminCertificates = () => {
       <div><h1 className="text-2xl font-bold">Certificates</h1><p className="text-slate-500">Manage certificate approvals</p></div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <StatsCard title="Total" value={certificates.length} icon={Award} color="primary" />
+        <StatsCard title="Total" value={data?.pagination?.total || certificates.length} icon={Award} color="primary" />
         <StatsCard title="Approved" value={certificates.filter(c => c.status === 'approved').length} icon={CheckCircle} color="secondary" />
         <StatsCard title="Pending" value={certificates.filter(c => c.status === 'pending').length} icon={Eye} color="accent" />
         <StatsCard title="Rejected" value={certificates.filter(c => c.status === 'rejected').length} icon={XCircle} color="danger" />

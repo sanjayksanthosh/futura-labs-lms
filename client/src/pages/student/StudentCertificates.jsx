@@ -3,7 +3,9 @@ import { useFetch } from '../../hooks/useQuery';
 import { certificateService } from '../../services/endpoints';
 import { Award, Download } from 'lucide-react';
 import { Badge } from '../../components/ui/Badge';
+import { LoadingSpinner } from '../../components/ui/LoadingSpinner';
 import { formatDate } from '../../utils/helpers';
+import toast from 'react-hot-toast';
 
 const statusColors = { approved: 'success', pending: 'warning', rejected: 'danger' };
 
@@ -15,6 +17,7 @@ export const StudentCertificates = () => {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
       <div><h1 className="text-2xl font-bold">My Certificates</h1><p className="text-slate-500">Download your certificates</p></div>
 
+      {isLoading ? <LoadingSpinner className="py-20" /> : (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {certificates.length === 0 ? (
           <div className="col-span-full text-center py-16 text-slate-500">No certificates yet. Complete courses to earn certificates.</div>
@@ -24,16 +27,17 @@ export const StudentCertificates = () => {
               <Award className="h-8 w-8 text-white" />
             </div>
             <h3 className="font-semibold mb-1">{cert.title}</h3>
-            <p className="text-sm text-slate-500 mb-2">Issued: {formatDate(cert.issuedDate)}</p>
+            <p className="text-sm text-slate-500 mb-2">Issued: {cert.issuedDate ? formatDate(cert.issuedDate) : 'Pending'}</p>
             <Badge variant={statusColors[cert.status]} className="capitalize">{cert.status}</Badge>
             {cert.status === 'approved' && (
-              <button className="btn-primary mt-4 w-full flex items-center justify-center gap-2">
+              <button onClick={() => cert.certificateUrl ? window.open(cert.certificateUrl, '_blank') : toast.error('Certificate not available yet')} className="btn-primary mt-4 w-full flex items-center justify-center gap-2">
                 <Download className="h-4 w-4" /> Download
               </button>
             )}
           </motion.div>
         ))}
       </div>
+      )}
     </motion.div>
   );
 };

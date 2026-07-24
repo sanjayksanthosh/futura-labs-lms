@@ -114,7 +114,7 @@ export const AdminQuizzes = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <StatsCard title="Total Quizzes" value={quizzes.length} icon={BrainCircuit} color="primary" />
+        <StatsCard title="Total Quizzes" value={data?.pagination?.total || quizzes.length} icon={BrainCircuit} color="primary" />
         <StatsCard title="Published" value={quizzes.filter(q => q.isPublished).length} icon={HelpCircle} color="secondary" />
         <StatsCard title="Total Questions" value={quizzes.reduce((s, q) => s + (q.questions?.length || 0), 0)} icon={Copy} color="accent" />
         <StatsCard title="Avg Pass Rate" value={quizzes.length ? Math.round(quizzes.reduce((s, q) => s + (q.passingScore || 40), 0) / quizzes.length) : 0} icon={BrainCircuit} color="purple" suffix="%" />
@@ -123,16 +123,16 @@ export const AdminQuizzes = () => {
       <DataTable columns={columns} data={quizzes} loading={isLoading} page={page} totalPages={data?.pagination?.totalPages || 1} onPageChange={setPage} />
 
       {/* Create/Edit Quiz Modal */}
-      <Modal isOpen={showModal} onClose={() => setShowModal(false)} title={editQuiz ? 'Edit Quiz' : 'Create Quiz'} size="2xl">
+      <Modal isOpen={showModal} onClose={() => { setShowModal(false); setEditQuiz(null); }} title={editQuiz ? 'Edit Quiz' : 'Create Quiz'} size="2xl">
         <form onSubmit={handleSubmit} className="space-y-6 max-h-[70vh] overflow-y-auto">
           <div className="space-y-4">
             <input value={quizForm.title} onChange={e => updateForm('title', e.target.value)} placeholder="Quiz Title" className="input-field" required />
             <textarea value={quizForm.description} onChange={e => updateForm('description', e.target.value)} placeholder="Description" className="input-field" rows={2} />
             <input value={quizForm.course} onChange={e => updateForm('course', e.target.value)} placeholder="Course ID (optional)" className="input-field" />
             <div className="grid grid-cols-3 gap-4">
-              <div><label className="label">Time (min)</label><input type="number" value={quizForm.timeLimit} onChange={e => updateForm('timeLimit', e.target.value)} className="input-field" /></div>
-              <div><label className="label">Pass %</label><input type="number" value={quizForm.passingScore} onChange={e => updateForm('passingScore', e.target.value)} className="input-field" /></div>
-              <div><label className="label">Max Attempts</label><input type="number" value={quizForm.maxAttempts} onChange={e => updateForm('maxAttempts', e.target.value)} className="input-field" /></div>
+              <div><label className="label">Time (min)</label><input type="number" value={quizForm.timeLimit} onChange={e => updateForm('timeLimit', Number(e.target.value))} className="input-field" /></div>
+              <div><label className="label">Pass %</label><input type="number" value={quizForm.passingScore} onChange={e => updateForm('passingScore', Number(e.target.value))} className="input-field" /></div>
+              <div><label className="label">Max Attempts</label><input type="number" value={quizForm.maxAttempts} onChange={e => updateForm('maxAttempts', Number(e.target.value))} className="input-field" /></div>
             </div>
           </div>
 
@@ -160,7 +160,7 @@ export const AdminQuizzes = () => {
                     </select>
                     <div className="flex items-center gap-2">
                       <span className="text-xs text-slate-500">Points:</span>
-                      <input type="number" value={q.points} onChange={e => updateQuestion(qi, 'points', e.target.value)} className="input-field text-xs w-16" min={1} />
+                      <input type="number" value={q.points} onChange={e => updateQuestion(qi, 'points', Number(e.target.value))} className="input-field text-xs w-16" min={1} />
                     </div>
                   </div>
                   <div className="space-y-1">
