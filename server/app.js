@@ -12,6 +12,11 @@ const logger = require('./utils/logger');
 
 const app = express();
 
+// Trust proxy (required on Render behind reverse proxy)
+if (config.env === 'production') {
+  app.set('trust proxy', 1);
+}
+
 // Security
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 app.use(cors({ origin: config.cors.origin, credentials: true }));
@@ -21,6 +26,8 @@ app.use(mongoSanitize());
 const limiter = rateLimit({
   windowMs: config.rateLimit.windowMs,
   max: config.rateLimit.max,
+  standardHeaders: true,
+  legacyHeaders: false,
   message: { success: false, message: 'Too many requests, please try again later.' },
 });
 app.use('/api', limiter);
